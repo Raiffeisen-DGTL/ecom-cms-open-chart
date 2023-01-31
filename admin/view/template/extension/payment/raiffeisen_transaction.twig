@@ -1,0 +1,50 @@
+<table class="table table-striped table-bordered">
+  <thead>
+    <tr>
+      <td class="text-left">{{ column_id }}</td>
+      <td class="text-left">{{ column_transaction }}</td>
+      <td class="text-left">{{ column_nomenclature_code }}</td>
+      <td class="text-left">{{ column_name }}</td>
+      <td class="text-left">{{ column_qty }}</td>
+      <td class="text-left">{{ column_price }}</td>
+      <td class="text-left">{{ column_amount }}</td>
+      <td class="text-left">{{ column_operation }}</td>
+      <td class="text-left">{{ column_code }}</td>
+      <td class="text-left">{{ column_created_at }}</td>
+      <td class="text-left">{{ column_action }}</td>
+    </tr>
+  </thead>
+  <tbody>
+  
+  {% if transactions %}
+  {% for transaction in transactions %}
+  <tr>
+    <td class="text-left">{{ transaction.raiffeisen_transaction_item_id }}</td>
+    <td class="text-left">{{ transaction.transaction_id }}</td>
+    <td class="text-left">{{ transaction.nomenclature_code }}</td>
+    <td class="text-left">{{ transaction.name }}</td>
+    <td class="text-left">{{ transaction.qty }}</td>
+    <td class="text-left">{{ transaction.price }}</td>
+    <td class="text-left">{{ transaction.amount }}</td>
+    <td class="text-left">{{ transaction.operation }}</td>
+    <td class="text-left">{{ transaction.code }}</td>
+    <td class="text-left">{{ transaction.created_at }}</td>
+    <td class="text-left">
+      {% if transaction.transaction_id and transaction.code == 'SUCCESS' %}
+        {% if transaction.operation == 'sale' %}
+          <a href="{{ transaction.refund }}" data-toggle="tooltip" title="{{ button_refund }}" class="btn btn-danger"><i class="fa fa-reply"></i></a>&nbsp;
+        {% elseif transaction.operation == 'start_refund' %}
+          <button type="button" value="{{ transaction.resend }}" data-toggle="tooltip" title="{{ button_resend }}" class="btn btn-info"><i class="fa fa-refresh"></i></button>
+        {% endif %}
+      {% endif %}
+    </td>
+  </tr>
+  {% endfor %}
+  {% else %}
+  <tr>
+    <td class="text-center" colspan="7">{{ text_no_results }}</td>
+  </tr>
+  {% endif %}
+  </tbody>
+  
+</table>
