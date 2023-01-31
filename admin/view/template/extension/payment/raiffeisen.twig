@@ -1,0 +1,344 @@
+{{ header }}{{ column_left }}
+<div id="content">
+    <ul class="breadcrumb">
+        {% for breadcrumb in breadcrumbs %}
+            <li><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+        {% endfor %}
+    </ul>
+    <div class="page-header">
+        <div class="container-fluid">
+            <div class="pull-right">
+                <button type="submit" form="form-payment" data-toggle="tooltip" title="{{ button_save }}"
+                        class="btn btn-primary"><i class="fa fa-save"></i></button>
+                <a href="{{ cancel }}" data-toggle="tooltip" title="{{ button_cancel }}" class="btn btn-default"><i
+                            class="fa fa-reply"></i></a></div>
+            <h1><i class="fa fa-credit-card"></i>&nbsp;&nbsp;{{ heading_title }}</h1>
+        </div>
+    </div>
+    <div class="container-fluid">
+        {% if error_warning %}
+            <div class="alert alert-danger alert-dismissible"><i
+                        class="fa fa-exclamation-circle"></i> {{ error_warning }}
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+            </div>
+        {% endif %}
+        {% if error_warning %}
+            <div class="alert alert-danger alert-dismissible"><i
+                        class="fa fa-exclamation-circle"></i> {{ error_warning }}
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+            </div>
+        {% endif %}
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <form action="{{ action }}" method="post" enctype="multipart/form-data" id="form-payment"
+                      class="form-horizontal">
+
+                    <input type="hidden" name="payment_raiffeisen_env_url" value="{{ payment_raiffeisen_env_url }}">
+                    <div class="form-group required">
+                        <label class="col-sm-2 control-label"
+                               for="input-payment_raiffeisen_public_id">{{ entry_payment_raiffeisen_public_id }}</label>
+                        <div class="col-sm-10">
+                            <input type="text" name="payment_raiffeisen_public_id"
+                                   value="{{ payment_raiffeisen_public_id }}" placeholder="{{ entry_payment_raiffeisen_public_id }}"
+                                   id="input-payment_raiffeisen_public_id" class="form-control" required/>
+                            {% if (error_payment_raiffeisen_public_id) %}
+                                <div class="text-danger">{{ error_message_payment_raiffeisen_public_id }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="form-group required">
+                        <label class="col-sm-2 control-label"
+                               for="input-payment_raiffeisen_secret_key">{{ entry_payment_raiffeisen_secret_key }}</label>
+                        <div class="col-sm-10">
+                            <input type="text" name="payment_raiffeisen_secret_key"
+                                   value="{{ payment_raiffeisen_secret_key }}" placeholder="{{ entry_payment_raiffeisen_secret_key }}"
+                                   id="input-payment_raiffeisen_secret_key" class="form-control" required/>
+                            {% if (error_payment_raiffeisen_secret_key) %}
+                                <div class="text-danger">{{ error_message_payment_raiffeisen_secret_key }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">{{ entry_payment_notification_url }}</label>
+                        <div class="col-sm-10">{{ payment_notification_url }}</div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">{{ entry_payment_success_url }}</label>
+                        <div class="col-sm-10">{{ payment_success_url }}</div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">{{ entry_payment_fail_url }}</label>
+                        <div class="col-sm-10">{{ payment_fail_url }}</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label"
+                               for="input-payment_raiffeisen_order_comment">{{ entry_payment_raiffeisen_order_comment }}</label>
+                        <div class="col-sm-10">
+                            <input type="text" name="payment_raiffeisen_order_comment"
+                                   value="{{ payment_raiffeisen_order_comment }}" placeholder="{{ entry_payment_raiffeisen_order_comment }}"
+                                   id="input-payment_raiffeisen_order_comment" class="form-control"  required/>
+                            {% if (error_payment_raiffeisen_order_comment) %}
+                                <div class="text-danger">{{ error_message_payment_raiffeisen_order_comment }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label"
+                               for="input-payment_raiffeisen_frontend_name">{{ entry_payment_raiffeisen_frontend_name }}</label>
+                        <div class="col-sm-10">
+                            <input type="text" name="payment_raiffeisen_frontend_name"
+                                   value="{{ payment_raiffeisen_frontend_name }}" placeholder="{{ entry_payment_raiffeisen_frontend_name }}"
+                                   id="input-payment_raiffeisen_frontend_name" class="form-control" />
+                            {% if (error_payment_raiffeisen_frontend_name) %}
+                                <div class="text-danger">{{ error_message_payment_raiffeisen_frontend_name }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label"
+                               for="input-payment_raiffeisen_payment_method">{{ entry_payment_raiffeisen_payment_method }}</label>
+                        <div class="col-sm-10">
+                            <select name="payment_raiffeisen_payment_method" id="input-payment_raiffeisen_payment_method" class="form-control"  required>
+                                {% for option in method_options %}
+                                    <option value="{{ option['id'] }}" {{ (payment_raiffeisen_payment_method==option['id']) ? 'selected="selected"' : '' }}>
+                                        {% if (option['id']) %}
+                                            {{ _context['entry_payment_raiffeisen_payment_method_name_' ~ option['id']] }}
+                                        {% else %}
+                                            {{ _context['entry_payment_raiffeisen_payment_method_name_ALL'] }}
+                                        {% endif %}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                            {% if (error_payment_raiffeisen_payment_method) %}
+                                <div class="text-danger">{{ error_message_payment_raiffeisen_payment_method }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label"
+                               for="input-payment_raiffeisen_payment_details">{{ entry_payment_raiffeisen_payment_details }}</label>
+                        <div class="col-sm-10">
+                            <input type="text" name="payment_raiffeisen_payment_details"
+                                   value="{{ payment_raiffeisen_payment_details }}" placeholder="{{ entry_payment_raiffeisen_payment_details }}"
+                                   id="input-payment_raiffeisen_payment_details" class="form-control"  required/>
+                            {% if (error_payment_raiffeisen_payment_details) %}
+                                <div class="text-danger">{{ error_message_payment_raiffeisen_payment_details }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-sm-2">
+                            <label class="control-label"
+                               for="input-payment_raiffeisen_css">{{ entry_payment_raiffeisen_css }}</label>
+                        </div>
+                        <div class="col-sm-10">
+                            <textarea name="payment_raiffeisen_css" rows="10" placeholder="{{ entry_payment_raiffeisen_css }}" id="input-payment_raiffeisen_css" class="form-control">{{ payment_raiffeisen_css }}</textarea>
+                            <div style="padding-top: 10px;">{{ entry_payment_raiffeisen_css_description }}</div>
+                            {% if (error_payment_raiffeisen_css) %}
+                                <div class="text-danger">{{ error_message_payment_raiffeisen_css }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label"
+                               for="input-payment_raiffeisen_cash_receipt">{{ entry_payment_raiffeisen_cash_receipt }}</label>
+                        <div class="col-sm-10">
+                            <select name="payment_raiffeisen_cash_receipt" id="input-payment_raiffeisen_cash_receipt" class="form-control"  required>
+                                {% if payment_raiffeisen_cash_receipt %}
+                                    <option value="ffd_12" selected="selected">{{ text_enabled }}</option>
+                                    <option value="">{{ text_disabled }}</option>
+                                {% else %}
+                                    <option value="ffd_12">{{ text_enabled }}</option>
+                                    <option value="" selected="selected">{{ text_disabled }}</option>
+                                {% endif %}
+                            </select>
+                            {% if (error_payment_raiffeisen_cash_receipt) %}
+                                <div class="text-danger">{{ error_message_payment_raiffeisen_cash_receipt }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label"
+                               for="input-payment_raiffeisen_popup">{{ entry_payment_raiffeisen_popup }}</label>
+                        <div class="col-sm-10">
+                            <select name="payment_raiffeisen_popup" id="input-payment_raiffeisen_popup" class="form-control"  required>
+                                {% if payment_raiffeisen_popup %}
+                                    <option value="true" selected="selected">{{ text_enabled }}</option>
+                                    <option value="">{{ text_disabled }}</option>
+                                {% else %}
+                                    <option value="true">{{ text_enabled }}</option>
+                                    <option value="" selected="selected">{{ text_disabled }}</option>
+                                {% endif %}
+                            </select>
+                            {% if (error_payment_raiffeisen_popup) %}
+                                <div class="text-danger">{{ error_message_payment_raiffeisen_popup }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label"
+                               for="input-payment_raiffeisen_unit_products">{{ entry_payment_raiffeisen_unit_products }}</label>
+                        <div class="col-sm-10">
+                            <select name="payment_raiffeisen_unit_products" id="input-payment_raiffeisen_unit_products" class="form-control">
+                                {% for option in unit_options %}
+                                    <option value="{{ option['id'] }}" {{ (payment_raiffeisen_unit_products==option['id']) ? 'selected="selected"' : '' }}>
+                                        {{ option['name'] }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                            {% if (error_payment_raiffeisen_unit_products) %}
+                                <div class="text-danger">{{ error_payment_raiffeisen_unit_products }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label"
+                               for="input-payment_raiffeisen_unit_delivery">{{ entry_payment_raiffeisen_unit_delivery }}</label>
+                        <div class="col-sm-10">
+                            <select name="payment_raiffeisen_unit_delivery" id="input-payment_raiffeisen_unit_delivery" class="form-control">
+                                {% for option in unit_options %}
+                                    <option value="{{ option['id'] }}" {{ (payment_raiffeisen_unit_delivery==option['id']) ? 'selected="selected"' : '' }}>
+                                        {{ option['name'] }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                            {% if (error_payment_raiffeisen_unit_delivery) %}
+                                <div class="text-danger">{{ error_payment_raiffeisen_unit_delivery }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label"
+                               for="input-payment_raiffeisen_object_products">{{ entry_payment_raiffeisen_object_products }}</label>
+                        <div class="col-sm-10">
+                            <select name="payment_raiffeisen_object_products" id="input-payment_raiffeisen_object_products" class="form-control">
+                                {% for option in object_options %}
+                                    <option value="{{ option['id'] }}" {{ (payment_raiffeisen_object_products==option['id']) ? 'selected="selected"' : '' }}>
+                                        {{ option['name'] }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                            {% if (error_payment_raiffeisen_object_products) %}
+                                <div class="text-danger">{{ error_payment_raiffeisen_object_products }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label"
+                               for="input-payment_raiffeisen_object_delivery">{{ entry_payment_raiffeisen_object_delivery }}</label>
+                        <div class="col-sm-10">
+                            <select name="payment_raiffeisen_object_delivery" id="input-payment_raiffeisen_object_delivery" class="form-control">
+                                {% for option in object_options %}
+                                    <option value="{{ option['id'] }}" {{ (payment_raiffeisen_object_delivery==option['id']) ? 'selected="selected"' : '' }}>
+                                        {{ option['name'] }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                            {% if (error_payment_raiffeisen_object_delivery) %}
+                                <div class="text-danger">{{ error_payment_raiffeisen_object_delivery }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label"
+                               for="input-payment_raiffeisen_order_success_status">{{ entry_payment_raiffeisen_order_success_status }}</label>
+                        <div class="col-sm-10">
+                            <select name="payment_raiffeisen_order_success_status" id="input-payment_raiffeisen_order_success_status"
+                                    class="form-control">
+                                {% for order_status in order_statuses %}
+                                    {% if (order_status['order_status_id'] == payment_raiffeisen_order_success_status) %}
+                                        <option value="{{ order_status['order_status_id'] }}"
+                                                selected="selected">{{ order_status['name'] }}</option>
+                                    {% else %}
+                                        <option value="{{ order_status['order_status_id'] }}">{{ order_status['name'] }}</option>
+                                    {% endif %}
+                                {% endfor %}
+                            </select>
+                            {% if (error_payment_raiffeisen_order_success_status) %}
+                                <div class="text-danger">{{ error_payment_raiffeisen_order_success_status }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label"
+                               for="input-payment_raiffeisen_order_fail_status">{{ entry_payment_raiffeisen_order_fail_status }}</label>
+                        <div class="col-sm-10">
+                            <select name="payment_raiffeisen_order_fail_status" id="input-payment_raiffeisen_order_fail_status"
+                                    class="form-control">
+                                {% for order_status in order_statuses %}
+                                    {% if (order_status['order_status_id'] == payment_raiffeisen_order_fail_status) %}
+                                        <option value="{{ order_status['order_status_id'] }}"
+                                                selected="selected">{{ order_status['name'] }}</option>
+                                    {% else %}
+                                        <option value="{{ order_status['order_status_id'] }}">{{ order_status['name'] }}</option>
+                                    {% endif %}
+                                {% endfor %}
+                            </select>
+                            {% if (error_payment_raiffeisen_order_fail_status) %}
+                                <div class="text-danger">{{ error_payment_raiffeisen_order_fail_status }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label" for="input-status">{{ entry_payment_raiffeisen_status }}</label>
+                        <div class="col-sm-10">
+                            <select name="payment_raiffeisen_status" id="input-status" class="form-control">
+                                {% if payment_raiffeisen_status %}
+                                    <option value="1" selected="selected">{{ text_enabled }}</option>
+                                    <option value="0">{{ text_disabled }}</option>
+                                {% else %}
+                                    <option value="1">{{ text_enabled }}</option>
+                                    <option value="0" selected="selected">{{ text_disabled }}</option>
+                                {% endif %}
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label"
+                               for="input-payment_raiffeisen_log">{{ entry_payment_raiffeisen_log }}</label>
+                        <div class="col-sm-10">
+                            <select name="payment_raiffeisen_log" id="input-payment_raiffeisen_log" class="form-control">
+                                {% if (payment_raiffeisen_log) %}
+                                    <option value="1" selected="selected">{{ text_enabled }}</option>
+                                    <option value="0">{{ text_disabled }}</option>
+                                {% else %}
+                                    <option value="1">{{ text_enabled }}</option>
+                                    <option value="0" selected="selected">{{ text_disabled }}</option>
+                                {% endif %}
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label"
+                               for="input-payment_raiffeisen_sort_order">{{ entry_payment_raiffeisen_sort_order }}</label>
+                        <div class="col-sm-10">
+                            <input type="text" name="payment_raiffeisen_sort_order" value="{{ payment_raiffeisen_sort_order }}"
+                                   placeholder="{{ entry_payment_sort_order }}" id="input-payment_raiffeisen_sort_order"
+                                   class="form-control"/>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<link rel="stylesheet" type="text/css" href="{{ linkToCss }}">
+{{ footer }}

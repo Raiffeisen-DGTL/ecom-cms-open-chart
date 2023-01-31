@@ -1,0 +1,96 @@
+{% if (raiffeisen_css) %}
+    <link href="/catalog/view/theme/default/stylesheet/extension/payment/raiffeisen/payment.min.css" rel="stylesheet" media="screen" />
+    <link href="/catalog/view/theme/default/stylesheet/extension/payment/raiffeisen/rf.css" rel="stylesheet" media="screen" />
+{% endif %}
+
+{% if (raiffeisen_js) %}
+    <script src="{{ raiffeisen_js }}"
+            data-complete="{{ completeCallback }}"
+            data-error="errorCallback"
+            data-cancel="{{ cancelCallback }}">
+    </script>
+{% endif %}
+
+<div id="order_review">
+    <form class="{{ formClass }}" action="{{ action }}" method="post">
+        {% for key, value in args %}
+            <input type="hidden" value='{{ value }}' name="{{ key }}">
+        {% endfor %}
+        <div class="buttons">
+            <div class="pull-right"><input type="submit" value="{{ button_confirm }}" class="btn btn-primary" /></div>
+        </div>
+    </form>
+</div>
+
+{% if (isPopup) %}
+    <script type="text/javascript">
+        $(document).ready(function() {
+            let rf_popup = {
+                order_review: $('#order_review'),
+                paymentOrderNoDefault: true,
+                checkoutForm: $('form.checkout.popUpBank'),
+
+                init: function () {
+                    if (this.checkoutForm.length > 0) {
+                        this.checkoutForm.off( 'submit' );
+                        this.checkoutForm.on( 'submit', rf_popup.submitForm );
+                    }
+                },
+                submitForm: function() {
+                    try {
+                        const paymentPage = new PaymentPageSdk( rf_popup.checkoutForm.find('[name="publicId"]').eq(0).val(), {
+                            url: rf_popup.checkoutForm.attr('action')
+                        });
+
+                        let sendData = {
+                            amount: rf_popup.checkoutForm.find('[name="amount"]').eq(0).val(),
+                            orderId: rf_popup.checkoutForm.find('[name="orderId"]').eq(0).val(),
+                            successUrl: rf_popup.checkoutForm.find('[name="successUrl"]').eq(0).val(),
+                            failUrl: rf_popup.checkoutForm.find('[name="failUrl"]').eq(0).val(),
+                            successSbpUrl: rf_popup.checkoutForm.find('[name="successSbpUrl"]').eq(0).val(),
+                            paymentMethod: rf_popup.checkoutForm.find('[name="paymentMethod"]').eq(0).val(),
+                            locale: rf_popup.checkoutForm.find('[name="locale"]').eq(0).val(),
+                            comment: rf_popup.checkoutForm.find('[name="comment"]').eq(0).val(),
+                            paymentDetails: rf_popup.checkoutForm.find('[name="paymentDetails"]').eq(0).val(),
+                            extra: rf_popup.checkoutForm.find('[name="extra"]').eq(0).val(),
+                        };
+
+                        {% if (js_popup_style) %}
+                            sendData.style = {{ js_popup_style }}
+                        {% endif %}
+
+                        if ( rf_popup.checkoutForm.find('[name="receipt"]').length > 0 ) {
+                            sendData.receipt = rf_popup.checkoutForm.find('[name="receipt"]').eq(0).val();
+                        }
+
+                                paymentPage.openPopup(sendData).then(function(result) {
+                                    console.log("Спасибо");
+                                    window.location = result.success;
+                                }).catch(function() {
+                                    console.log('error')
+                                    throw 'Error';
+                                });
+
+                        return false
+                    } catch( err ) {
+                        console.log(err)
+
+                        return false
+                    }
+                },
+                submit_error: function( error_message ) {},
+                is_valid_json: function( raw_json ) {
+                    try {
+                        let json = $.parseJSON( raw_json );
+
+                        return ( json && 'object' === typeof json );
+                    } catch ( e ) {
+                        return false;
+                    }
+                },
+            };
+
+            rf_popup.init();
+        });
+    </script>
+{% endif %}

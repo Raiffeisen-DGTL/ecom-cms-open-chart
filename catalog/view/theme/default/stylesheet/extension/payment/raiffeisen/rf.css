@@ -1,0 +1,32 @@
+#payment .payment_methods li img.rf {
+	float: none;
+	display: inline-block;
+	vertical-align: left;
+    margin-left: -4px;
+}
+
+.rf {
+    height: 22px;
+    margin-left: -4px;
+    margin-top: 4px;
+}
+
+#payment .payment_methods li img.rf + span {
+//	float: left;
+}
+.payments {
+    background: #fff;
+    margin-left: -152px;
+}
+#payment .payment_methods li img.rf + span {
+//	float: left;
+}
+
+#payment .payment_methods li img.rf + span img {
+	display: inline-block;
+	vertical-align: middle;
+	float: none;
+}
+payment_method_rf {
+    height: 32px;
+}
